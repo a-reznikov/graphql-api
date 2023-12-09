@@ -1,49 +1,14 @@
-let people =
-  [
-    {
-      id: 1,
-      name: "a-reznikov",
-      age: 20,
-      gender: "male",
-    },
-    {
-      id: 2,
-      name: "Hell-Cat",
-      age: 5,
-      gender: "male",
-    },
-    {
-      id: 3,
-      name: "Lqosl",
-      age: 18,
-      gender: "female",
-    },
-    {
-      id: 4,
-      name: "Insanusmokrassar",
-      age: 100,
-      gender: "male",
-    }
-  ]
+const API_URL = "https://yts.mx/api/v2/list_movies.json?";
 
-export const getPeople = () => people;
-
-export const getByID = (id) => people.find((person) => person.id === id);
-
-export const addPerson = (name, age, gender) => {
-  const newPerson = {
-    id: people.length + 1,
-    name,
-    age,
-    gender
+export const getMovies = (limit, rating) => {
+  let REQUEST_URL = API_URL;
+  if (limit > 0) {
+    REQUEST_URL += `limit=${limit}`;
   }
-  people.push(newPerson);
-  return newPerson;
-}
-
-export const deletePerson = (id) => {
-  const newPeopleList = people.filter((person) => person.id !== id)
-  const isDeleted = newPeopleList.length !== people.length
-  people = newPeopleList;
-  return isDeleted;
-}
+  if (rating > 0) {
+    REQUEST_URL += `&minimum_rating=${rating}`;
+  }
+  return fetch(`${REQUEST_URL}`)
+    .then((res) => res.json())
+    .then((json) => json.data.movies);
+};
